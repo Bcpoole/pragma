@@ -151,8 +151,6 @@ namespace dpl {
         dictionary();
       } else if (optArrayPending()) {
         optArray();
-      } else if (lambdaPending()) {
-        lambda();
       }
     }
     bool primaryPending() {
