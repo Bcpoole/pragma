@@ -1,0 +1,6 @@
+myFunc (x) {
+  a = 7;
+}//myFunc(33);
+
+//myFunc(34);
+myFunc(35);

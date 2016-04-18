@@ -1,0 +1,102 @@
+program : optStatementList
+
+funcDef  : ID OPAREN optParamList CPAREN block
+
+optParamList  : *empty*
+              | paramList
+
+paramList : expr
+          | expr COMMA paramList
+            
+optArgList  : *empty*
+            | argList
+
+argList : expr
+        | expr COMMA argList
+
+expr  : primary
+      | primary op expr optExprList
+
+optExprList : *empty*
+            | OR expr
+            | AND expr
+
+primary : ID
+        | STRING
+        | INTEGER
+        | lambda
+        | funcDef
+        | MINUS INTEGER
+        | ID OPAREN optArgList CPAREN
+        | ID ASSIGN optArray
+        | ID ASSIGN dictionary
+
+block : OBRACE optStatementList CBRACE
+
+optStatementList  : *empty*
+                  | statementList
+
+statementList : statement
+              | statement statementList
+
+statement : varDef SEMI
+          | whileLoop
+          | expr SEMI
+          | ifStatement
+          | RETURN expr SEMI
+          | funcDef
+
+op  : PLUS
+    | INCREMENT
+    | PLUS_TO
+    | MINUS
+    | DECREMENT
+    | MINUS_TO
+    | TIMES
+    | TIMES_TO
+    | DIVIDES
+    | DIVIDES_TO
+    | MOD
+    | MOD_TO
+    | EXPN
+    | EXPN_TO
+    | ASSIGN
+    | EQUAL
+    | NOT_EQUAL
+    | LESSTHAN
+    | LESSTHAN_EQUALTO
+    | GREATERTHAN
+    | GREATERTHAN_EQUALTO
+    | AND
+    | OR
+
+whileLoop : WHILE OPAREN expr CPAREN block
+
+ifStatement : IF OPAREN expr CPAREN block optElif
+
+optElif : optElse
+        | ELIF OPAREN expr CPAREN block optElif
+
+optElse : *empty*
+        | ELSE block
+
+varDef  : ID optAssign
+
+optAssign : *empty*
+          | ASSIGN expr
+
+optArray : OBRACKET CBRACKET
+        | OBRACKET array CBRACKET
+
+array : primary
+      | primary COMMA array
+
+lambda : OPAREN optArgList CPAREN ARROW block
+
+dictionary : OBRACE optDictList CBRACE
+
+optDictList : *empty*
+            | dictList
+
+dictList : STRING COLON primary
+         | STRING COLON primary COMMA dictList
