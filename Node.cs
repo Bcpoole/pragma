@@ -24,5 +24,9 @@ namespace dpl {
     public Node(Lexeme val) {
       Value = val;
     }
+    
+    public Node() {
+      
+    }
   }
 }
