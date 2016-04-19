@@ -91,7 +91,7 @@ optArray : OBRACKET CBRACKET
 array : primary
       | primary COMMA array
 
-lambda : OPAREN optArgList CPAREN ARROW block
+lambda : OPAREN optArgList CPAREN LAMBDA_DEF block
 
 dictionary : OBRACE optDictList CBRACE
 
