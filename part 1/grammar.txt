@@ -28,8 +28,8 @@ primary : ID
         | funcDef
         | MINUS INTEGER
         | ID OPAREN optArgList CPAREN
-        | ID ASSIGN optArray
-        | ID ASSIGN dictionary
+        | optArray
+        | dictionary
 
 block : OBRACE optStatementList CBRACE
 
@@ -72,9 +72,9 @@ op  : PLUS
 
 whileLoop : WHILE OPAREN expr CPAREN block
 
-ifStatement : IF OPAREN expr CPAREN block optElif optElse
+ifStatement : IF OPAREN expr CPAREN block optElif
 
-optElif : *empty*
+optElif : optElse
         | ELIF OPAREN expr CPAREN block optElif
 
 optElse : *empty*

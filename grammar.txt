@@ -28,8 +28,8 @@ primary : ID
         | funcDef
         | MINUS INTEGER
         | ID OPAREN optArgList CPAREN
-        | ID ASSIGN optArray
-        | ID ASSIGN dictionary
+        | optArray
+        | dictionary
 
 block : OBRACE optStatementList CBRACE
 
