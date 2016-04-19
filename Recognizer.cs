@@ -9,6 +9,11 @@ namespace dpl {
       get { return tokens[0]; }
     }
     
+    Node programTree;
+    public Node ProgramTree {
+      get { return programTree; }
+    }
+    
     public Recognizer(List<Lexeme> tokens) {
       this.tokens = tokens;
       
@@ -16,7 +21,7 @@ namespace dpl {
     }
     
     void parse() {
-      program();
+      programTree = program();
       match("END_OF_FILE");
     }
     
@@ -29,11 +34,11 @@ namespace dpl {
       tokens.RemoveAt(0);
     }
     
-    Lexeme match(string type) {
+    Node match(string type) {
       matchNoAdvance(type);
       var matchedLex = CurrentLexeme;
       advance();
-      return matchedLex;
+      return new Node(matchedLex);
     }
     
     void matchNoAdvance(string type) {
@@ -53,16 +58,24 @@ namespace dpl {
     }
     
     //Grammar Rules
-    void program() {
-      optStatementList();
+    Node program() {
+      var tree = new Node();
+      
+      tree = optStatementList();
+      
+      return tree;
     }
     
-    void funcDef() {
-      match("ID");
+    Node funcDef() {
+      var tree = new Node();
+      
+      tree = match("ID");
       match("OPAREN");
-      optParamList();
+      tree.Right = optParamList();
       match("CPAREN");
-      block();
+      tree.Right = block();
+      
+      return tree;
     }
     bool funcDefPending() {
       bool isFuncDefPending = false;
@@ -78,82 +91,112 @@ namespace dpl {
       return isFuncDefPending;
     }
     
-    void optParamList() {
+    Node optParamList() {
+      var tree = new Node();
+      
       if (!check("CPAREN")) {
-        paramList();
+        tree = paramList();
+      } else {
+        tree = new Node();
       }
+      
+      return tree;
     }
     
-    void paramList() {
-      expr();
+    Node paramList() {
+      var tree = new Node();
+      
+      tree = expr();
       if (check("COMMA")) {
         match("COMMA");
-        paramList();
+        tree.Right = paramList();
       }
+      
+      return tree;
     }
     
-    void optArgList() {
+    Node optArgList() {
+      var tree = new Node();
+      
       if (!check("CPAREN")) {
-        argList();
+        tree = argList();
       }
+      
+      return tree;
     }
     
-    void argList() {
-      expr();
+    Node argList() {
+      var tree = new Node();
+      
+      tree = expr();
       if (check("COMMA")) {
         match("COMMA");
-        argList();
+        tree.Right = argList();
       }
+      
+      return tree;
     }
     
-    void expr() {
-      primary();
+    Node expr() {
+      var tree = new Node();
+      
+      tree = primary();
       if (opPending()) {
-        op();
-        expr();
-        optExprList();
+        var temp = tree;
+        tree = op();
+        tree.Left = temp;
+        tree.Right = expr();
+        tree.Right.Right = optExprList();
       }
+      
+      return tree;
     }
     bool exprPending() {
       return primaryPending();
     }
     
-    void optExprList() {
+    Node optExprList() {
+      var tree = new Node();
+      
       if (check("AND")) {
-        match("AND");
-        expr();
+        tree = match("AND");
+        tree.Left = expr();
       } else if (check("OR")) {
-        match("OR");
-        expr();
+        tree = match("OR");
+        tree.Left = expr();
       }
+      
+      return tree;
     }
     
-    void primary() {
+    Node primary() {
+      var tree = new Node();
+      
       if (check("ID")) {
-        match("ID");
+        tree = match("ID");
         if (check("OPAREN")) {
           match("OPAREN");
-          optArgList();
+          tree.Right = optArgList();
           match("CPAREN");
         }
       } else if (check("STRING")) {
-        match("STRING");
+        tree = match("STRING");
       } else if (check("INTEGER")) {
-        match("INTEGER");
+        tree = match("INTEGER");
       } else if (lambdaPending()) {
-        lambda();
+        tree = lambda();
       } else if (funcDefPending()) {
-        funcDef();
+        tree = funcDef();
       } else if (check("MINUS")) {
-        match("MINUS");
-        match("INTEGER");
+        tree = match("MINUS");
+        tree.Left = match("INTEGER");
       } else if (dictionaryPending()) {
-        dictionary();
+        tree = dictionary();
       } else if (optArrayPending()) {
-        optArray();
-      } else if (lambdaPending()) {
-        lambda();
+        tree = optArray();
       }
+      
+      return tree;
     }
     bool primaryPending() {
       return check("ID") || check("STRING") || check("INTEGER") || check("OPAREN") ||
@@ -161,100 +204,120 @@ namespace dpl {
         optArrayPending() || dictionaryPending();
     }
     
-    void block() {
+    Node block() {
+      var tree = new Node();
+      
       match("OBRACE");
-      optStatementList();
+      tree = optStatementList();
       match("CBRACE");
+      
+      return tree;
     }
     
-    void optStatementList() {
+    Node optStatementList() {
+      var tree = new Node();
+      
       if (!check("CBRACE")) {
         statementList();
       }
+      
+      return tree;
     }
     bool optStatementListPending() {
       return (!check("CBRACE"));
     }
     
-    void statementList() {
-      statement();
+    Node statementList() {
+      var tree = new Node();
+      
+      tree = statement();
       if (statementListPending()) {
-        statementList();
+        tree.Right = statementList();
       }
+      
+      return tree;
     }
     bool statementListPending() {
       return statementPending();
     }
     
-    void statement() {
+    Node statement() {
+      var tree = new Node();
+      
       if (funcDefPending()) {
-        funcDef();
+        tree = funcDef();
       } else if (varDefPending()) {
-        varDef();
+        tree = varDef();
         match("SEMI");
       }
       else if (whileLoopPending()) {
-        whileLoop();
+        tree = whileLoop();
       } else if (exprPending()) {
-        expr();
+        tree = expr();
         match("SEMI");
       } else if (ifStatementPending()) {
-        ifStatement();
+        tree = ifStatement();
       } else if (check("RETURN")) {
-        match("RETURN");
-        expr();
+        tree = match("RETURN");
+        tree.Left = expr();
         match("SEMI");
       }
+      
+      return tree;
     }
     bool statementPending() {
       return funcDefPending() || whileLoopPending() || exprPending() ||
       ifStatementPending() || check("RETURN") || varDefPending();
     }
     
-    void op() {
+    Node op() {
+      var tree = new Node();
+      
       if (check("PLUS")) {
-        match("PLUS");
+        tree = match("PLUS");
       } else if (check("INCREMENT")) {
-        match("INCREMENT");
+        tree = match("INCREMENT");
       } else if (check("PLUS_TO")) {
-        match("PLUS_TO");
+        tree = match("PLUS_TO");
       } else if (check("MINUS")) {
-        match("MINUS");
+        tree = match("MINUS");
       } else if (check("DECREMENT")) {
-        match("DECREMENT");
+        tree = match("DECREMENT");
       } else if (check("MINUS_TO")) {
-        match("MINUS_TO");
+        tree = match("MINUS_TO");
       } else if (check("TIMES")) {
-        match("TIMES");
+        tree = match("TIMES");
       } else if (check("TIMES_TO")) {
-        match("TIMES_TO");
+        tree = match("TIMES_TO");
       } else if (check("DIVIDES")) {
-        match("DIVIDES");
+        tree = match("DIVIDES");
       } else if (check("DIVIDES_TO")) {
-        match("DIVIDES_TO");
+        tree = match("DIVIDES_TO");
       } else if (check("MOD")) {
-        match("MOD");
+        tree = match("MOD");
       } else if (check("MOD_TO")) {
-        match("MOD_TO");
+        tree = match("MOD_TO");
       } else if (check("EXPN")) {
-        match("EXPN");
+        tree = match("EXPN");
       } else if (check("EXPN_TO")) {
-        match("EXPN_TO");
+        tree = match("EXPN_TO");
       } else if (check("ASSIGN")) {
-        match("ASSIGN");
+        tree = match("ASSIGN");
       } else if (check("EQUAL")) {
-        match("EQUAL");
+        tree = match("EQUAL");
       } else if (check("NOT_EQUAL")) {
-        match("NOT_EQUAL");
+        tree = match("NOT_EQUAL");
       } else if (check("LESSTHAN")) {
-        match("LESSTHAN");
+        tree = match("LESSTHAN");
       } else if (check("LESSTHAN_EQUALTO")) {
-        match("LESSTHAN_EQUALTO");
+        tree = match("LESSTHAN_EQUALTO");
       } else if (check("GREATERTHAN")) {
-        match("GREATERTHAN");
+        tree = match("GREATERTHAN");
       } else if (check("GREATERTHAN_EQUALTO")) {
-        match("GREATERTHAN_EQUALTO");
+        tree = match("GREATERTHAN_EQUALTO");
       }
+      
+      return tree;
     }
     bool opPending() {
       return check("PLUS") || check("INCREMENT") || check("PLUS_TO") ||
@@ -269,92 +332,132 @@ namespace dpl {
         check("GREATERTHAN") || check("GREATERTHAN_EQUALTO");
     }
     
-    void whileLoop() {
-      match("WHILE");
+    Node whileLoop() {
+      var tree = new Node();
+      
+      tree = match("WHILE");
       match("OPAREN");
-      expr();
+      tree.Left = expr();
       match("CPAREN");
-      block();
+      tree.Right = block();
+      
+      return tree;
     }
     bool whileLoopPending() {
       return check("WHILE");
     }
     
-    void ifStatement() {
-      match("IF");
+    Node ifStatement() {
+      var tree = new Node();
+      
+      tree= match("IF");
       match("OPAREN");
-      expr();
+      tree.Left = expr();
       match("CPAREN");
-      block();
-      optElif();
+      tree.Left.Right = block();
+      tree.Right = optElif();
+      
+      return tree;
     }
     bool ifStatementPending() {
       return check("IF");
     }
     
-    void optElif() {
+    Node optElif() {
+      var tree = new Node();
+      
       if (check("ELIF")) {
-        match("ELIF");
+        tree = match("ELIF");
         match("OPAREN");
-        expr();
+        tree.Left = expr();
         match("CPAREN");
-        block();
-        optElif();
+        tree.Left.Right = block();
+        tree.Right = optElif();
       } else {
-        optElse();
+        tree = optElse();
       }
+      
+      return tree;
     }
     
-    void optElse() {
+    Node optElse() {
+      var tree = new Node();
+      
       if (check("ELSE")) {
-        match("ELSE");
-        block();
+        tree = match("ELSE");
+        tree.Right = block();
       }
+      
+      return tree;
     }
     
-    void varDef() {
-      match("ID");
-      optAssign();
+    Node varDef() {
+      var tree = new Node();
+      
+      tree = match("ID");
+      tree.Right = optAssign();
+      
+      return tree;
     }
     bool varDefPending() {
       return check("ID") && (checkAhead("SEMI",1) || checkAhead("ASSIGN",1));
     }
     
-    void optAssign() {
+    Node optAssign() {
+      var tree = new Node();
+      
       if (check("ASSIGN")) {
-        match("ASSIGN");
-        expr();
+        tree = match("ASSIGN");
+        tree.Right = expr();
       }
+      
+      return tree;
     }
     
-    void optArray() {
+    Node optArray() {
+      var tree = new Node();
+      
       match("OBRACKET");
       if (arrayPending()) {
-        array();
+        tree = array();
       }
       match("CBRACKET");
+      
+      return tree;
     }
     bool optArrayPending() {
       return check("OBRACKET");
     }
     
-    void array() {
-      primary();
+    Node array() {
+      var tree = new Node();
+      
+      tree = primary();
       if (check("COMMA")) {
         match("COMMA");
-        array();
+        tree.Right = array();
       }
+      
+      return tree;
     }
     bool arrayPending() {
       return primaryPending();
     }
     
-    void lambda() {
+    Node lambda() {
+      var tree = new Node();
+      
       match("OPAREN");
-      optArgList();
+      tree = optArgList();
       match("CPAREN");
-      match("LAMBDA_DEF");
-      block();
+      
+      var temp = tree;
+      tree = match("LAMBDA_DEF");
+      tree.Left = temp;
+      
+      tree.Right = block();
+      
+      return tree;
     }
     bool lambdaPending() {
       bool isLambdaPending = false;
@@ -370,29 +473,45 @@ namespace dpl {
       return isLambdaPending;
     }
     
-    void dictionary() {
+    Node dictionary() {
+      var tree = new Node();
+      
       match("OBRACE");
-      optDictList();
+      tree = optDictList();
       match("CBRACE");
+      
+      return tree;
     }
     bool dictionaryPending() {
       return check("OBRACE");
     }
     
-    void optDictList() {
+    Node optDictList() {
+      var tree = new Node();
+      
       if (check("STRING")) {
-        dictList();
+        tree = dictList();
       }
+      
+      return tree;
     }
     
-    void dictList() {
-      match("STRING");
-      match("COLON");
-      primary();
+    Node dictList() {
+      var tree = new Node();
+      
+      tree = match("STRING");
+      
+      var temp = tree;
+      tree = match("COLON");
+      tree.Left = temp;
+      
+      tree.Right = primary();
       if (check("COMMA")) {
         match("COMMA");
-        dictList();
+        tree.Right.Right = dictList();
       }
+      
+      return tree;
     }
   }
 }
