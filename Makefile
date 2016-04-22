@@ -1,7 +1,7 @@
 build:
 	mcs LexerScanner.cs Lexer.cs Lexeme.cs
 	mcs RecognizerScanner.cs Recognizer.cs Lexer.cs Lexeme.cs
-	mcs EnvironmentTest.cs Environment.cs Lexeme.cs
+	mcs EnvironmentTest.cs Environment.cs Lexeme.cs ConsMethods.cs
 
 run:
 	make build

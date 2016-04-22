@@ -1,9 +1,10 @@
 ﻿using System;
+using static dpl.ConsMethods;
 
 namespace dpl {
   public static class Environment {
     public static Lexeme Create() {
-      return Extend(null, null, null);
+      return Extend(null, null, null); //might need to plug in new Lexeme()
     }
 
     public static string Lookup(string id, Lexeme env) {
@@ -52,7 +53,10 @@ namespace dpl {
       return env;
     }
 
-    public static Lexeme Extend(Lexeme vars, Lexeme vals, Lexeme env) {
+    public static Lexeme Extend(Lexeme vars, Lexeme vals, Lexeme env) { //broken?
+      /*return Cons(env, vars,
+          Cons(CreateJOINLexeme(), vals,
+          Cons(CreateJOINLexeme(), env, null)));*/
       return Cons(new Lexeme("ENV"),
         Cons(new Lexeme("VALUES"), vars, vals),
         env);
@@ -101,36 +105,6 @@ namespace dpl {
         env = Cdr(env);
         depth++;
       }
-    }
-
-    //cons functions
-    public static Lexeme Cons(Lexeme val, Lexeme left, Lexeme right) {
-      val.Left = left;
-      val.Right = right;
-
-      return val;
-    }
-
-    public static Lexeme Car(Lexeme cons) {
-      return cons.Left;
-    }
-    public static void SetCar(Lexeme cons, Lexeme val) {
-      cons.Left = val;
-    }
-
-    public static Lexeme Cdr(Lexeme cons) {
-      return cons.Right;
-    }
-    public static void SetCdr(Lexeme cons, Lexeme val) {
-      cons.Right = val;
-    }
-
-    public static Lexeme Cadr(Lexeme cons) {
-      return cons.Right.Left;
-    }
-
-    public static Lexeme Caddr(Lexeme cons) {
-      return cons.Right.Right.Left;
     }
 
     private static Lexeme CreateJOINLexeme() {
