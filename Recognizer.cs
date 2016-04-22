@@ -57,12 +57,8 @@ namespace dpl {
     }
     
     //Grammar Rules
-    Node program() {
-      var tree = new Node();
-      
-      tree = optStatementList();
-      
-      return tree;
+    Node program() {     
+      return optStatementList();
     }
     
     Node funcDef() {
@@ -72,7 +68,7 @@ namespace dpl {
       match("OPAREN");
       tree.Right = optParamList();
       match("CPAREN");
-      tree.Right = block();
+      tree.Right.Right = block();
       
       return tree;
     }
@@ -91,12 +87,10 @@ namespace dpl {
     }
     
     Node optParamList() {
-      var tree = new Node();
+      var tree = new Node(new Lexeme("paramList"));
       
       if (!check("CPAREN")) {
-        tree = paramList();
-      } else {
-        tree = new Node();
+        tree.Left = paramList();
       }
       
       return tree;
@@ -204,20 +198,20 @@ namespace dpl {
     }
     
     Node block() {
-      var tree = new Node();
+      var tree = new Node(new Lexeme("block"));
       
       match("OBRACE");
-      tree = optStatementList();
+      tree.Left = optStatementList();
       match("CBRACE");
       
       return tree;
     }
     
     Node optStatementList() {
-      var tree = new Node();
+      var tree = new Node(new Lexeme("empty"));
       
       if (!check("CBRACE")) {
-        statementList();
+        tree = statementList();
       }
       
       return tree;
@@ -227,9 +221,9 @@ namespace dpl {
     }
     
     Node statementList() {
-      var tree = new Node();
+      var tree = new Node(new Lexeme("statement"));
       
-      tree = statement();
+      tree.Left = statement();
       if (statementListPending()) {
         tree.Right = statementList();
       }
