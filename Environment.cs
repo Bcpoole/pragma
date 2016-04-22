@@ -66,7 +66,6 @@ namespace dpl {
       if (env != null) {
         var vars = Car(env);
         var vals = Cadr(env);
-        Console.WriteLine("The environment is:");
         while (vars != null) {
           Console.WriteLine(String.Format("\t{0} : {1}", vars.Value.sval, vals.Value.GetValue()));
 
@@ -74,8 +73,6 @@ namespace dpl {
           vals = Cdr(vars);
         }
         env = Cdr(Cdr(env));
-      } else {
-        Console.WriteLine("The environment is null!");
       }
     }
     public static void PrintAll(Node env) {
