@@ -1,5 +1,5 @@
 myFunc (x) {
-  a = 7;
+  x = 7;
 }//myFunc(33);
 
 //myFunc(34);
