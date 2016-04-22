@@ -36,7 +36,7 @@ namespace dpl {
           }
           vars = Cdr(vars);
           vals = Cdr(vars);
-        }
+        } 
         env = Cdr(Cdr(env));
       }
 
@@ -57,6 +57,22 @@ namespace dpl {
     }
 
     public static void Print(Node env) {
+      if (env != null) {
+        var vars = Car(env);
+        var vals = Cadr(env);
+        Console.WriteLine("The environment is:");
+        while (vars != null) {
+          Console.WriteLine(String.Format("\t{0} : {1}", vars.Value.sval, vals.Value.GetValue()));
+
+          vars = Cdr(vars);
+          vals = Cdr(vars);
+        }
+        env = Cdr(Cdr(env));
+      } else {
+        Console.WriteLine("The environment is null!");
+      }
+    }
+    public static void PrintAll(Node env) {
       int depth = 0;
       while (env != null) {
         var vars = Car(env);
