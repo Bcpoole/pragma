@@ -8,8 +8,8 @@ namespace dpl {
       get { return tokens[0]; }
     }
     
-    Node programTree;
-    public Node ProgramTree {
+    Lexeme programTree;
+    public Lexeme ProgramTree {
       get { return programTree; }
     }
     
@@ -33,11 +33,11 @@ namespace dpl {
       tokens.RemoveAt(0);
     }
     
-    Node match(string type) {
+    Lexeme match(string type) {
       matchNoAdvance(type);
       var matchedLex = CurrentLexeme;
       advance();
-      return new Node(matchedLex);
+      return matchedLex;
     }
     
     void matchNoAdvance(string type) {
@@ -57,12 +57,12 @@ namespace dpl {
     }
     
     //Grammar Rules
-    Node program() {     
+    Lexeme program() {     
       return optStatementList();
     }
     
-    Node funcDef() {
-      var tree = new Node();
+    Lexeme funcDef() {
+      Lexeme tree;
       
       tree = match("ID");
       match("OPAREN");
@@ -86,8 +86,8 @@ namespace dpl {
       return isFuncDefPending;
     }
     
-    Node optParamList() {
-      var tree = new Node(new Lexeme("paramList"));
+    Lexeme optParamList() {
+      var tree = new Lexeme("paramList");
       
       if (!check("CPAREN")) {
         tree.Left = paramList();
@@ -96,8 +96,8 @@ namespace dpl {
       return tree;
     }
     
-    Node paramList() {
-      var tree = new Node();
+    Lexeme paramList() {
+      Lexeme tree;
       
       tree = expr();
       if (check("COMMA")) {
@@ -108,8 +108,8 @@ namespace dpl {
       return tree;
     }
     
-    Node optArgList() {
-      var tree = new Node();
+    Lexeme optArgList() {
+      Lexeme tree = null;
       
       if (!check("CPAREN")) {
         tree = argList();
@@ -118,8 +118,8 @@ namespace dpl {
       return tree;
     }
     
-    Node argList() {
-      var tree = new Node();
+    Lexeme argList() {
+      Lexeme tree;
       
       tree = expr();
       if (check("COMMA")) {
@@ -130,8 +130,8 @@ namespace dpl {
       return tree;
     }
     
-    Node expr() {
-      var tree = new Node();
+    Lexeme expr() {
+      Lexeme tree;
       
       tree = primary();
       if (opPending()) {
@@ -139,7 +139,9 @@ namespace dpl {
         tree = op();
         tree.Left = temp;
         tree.Right = expr();
-        tree.Right.Right = optExprList();
+        if (tree.type != "INCREMENT" && tree.type != "DECREMENT") {
+          tree.Right.Right = optExprList();
+        }
       }
       
       return tree;
@@ -148,8 +150,8 @@ namespace dpl {
       return primaryPending();
     }
     
-    Node optExprList() {
-      var tree = new Node();
+    Lexeme optExprList() {
+      Lexeme tree = null;
       
       if (check("AND")) {
         tree = match("AND");
@@ -162,8 +164,8 @@ namespace dpl {
       return tree;
     }
     
-    Node primary() {
-      var tree = new Node();
+    Lexeme primary() {
+      Lexeme tree = null;
       
       if (check("ID")) {
         tree = match("ID");
@@ -197,8 +199,8 @@ namespace dpl {
         optArrayPending() || dictionaryPending();
     }
     
-    Node block() {
-      var tree = new Node(new Lexeme("block"));
+    Lexeme block() {
+      var tree = new Lexeme("block");
       
       match("OBRACE");
       tree.Left = optStatementList();
@@ -207,8 +209,8 @@ namespace dpl {
       return tree;
     }
     
-    Node optStatementList() {
-      var tree = new Node(new Lexeme("empty"));
+    Lexeme optStatementList() {
+      var tree = new Lexeme("empty");
       
       if (!check("CBRACE")) {
         tree = statementList();
@@ -220,8 +222,8 @@ namespace dpl {
       return (!check("CBRACE"));
     }
     
-    Node statementList() {
-      var tree = new Node(new Lexeme("statement"));
+    Lexeme statementList() {
+      var tree = new Lexeme("statement");
       
       tree.Left = statement();
       if (statementListPending()) {
@@ -234,8 +236,8 @@ namespace dpl {
       return statementPending();
     }
     
-    Node statement() {
-      var tree = new Node();
+    Lexeme statement() {
+      Lexeme tree = null;
       
       if (funcDefPending()) {
         tree = funcDef();
@@ -263,8 +265,8 @@ namespace dpl {
       ifStatementPending() || check("RETURN") || varDefPending();
     }
     
-    Node op() {
-      var tree = new Node();
+    Lexeme op() {
+      Lexeme tree = null;
       
       if (check("PLUS")) {
         tree = match("PLUS");
@@ -325,8 +327,8 @@ namespace dpl {
         check("GREATERTHAN") || check("GREATERTHAN_EQUALTO");
     }
     
-    Node whileLoop() {
-      var tree = new Node();
+    Lexeme whileLoop() {
+      Lexeme tree;
       
       tree = match("WHILE");
       match("OPAREN");
@@ -340,8 +342,8 @@ namespace dpl {
       return check("WHILE");
     }
     
-    Node ifStatement() {
-      var tree = new Node();
+    Lexeme ifStatement() {
+      Lexeme tree;
       
       tree= match("IF");
       match("OPAREN");
@@ -356,8 +358,8 @@ namespace dpl {
       return check("IF");
     }
     
-    Node optElif() {
-      var tree = new Node();
+    Lexeme optElif() {
+      Lexeme tree;
       
       if (check("ELIF")) {
         tree = match("ELIF");
@@ -373,8 +375,8 @@ namespace dpl {
       return tree;
     }
     
-    Node optElse() {
-      var tree = new Node();
+    Lexeme optElse() {
+      Lexeme tree = null;
       
       if (check("ELSE")) {
         tree = match("ELSE");
@@ -384,8 +386,8 @@ namespace dpl {
       return tree;
     }
     
-    Node varDef() {
-      var tree = new Node();
+    Lexeme varDef() {
+      Lexeme tree;
       
       tree = match("ID");
       tree.Right = optAssign();
@@ -396,8 +398,8 @@ namespace dpl {
       return check("ID") && (checkAhead("SEMI",1) || checkAhead("ASSIGN",1));
     }
     
-    Node optAssign() {
-      var tree = new Node();
+    Lexeme optAssign() {
+      Lexeme tree = null;
       
       if (check("ASSIGN")) {
         tree = match("ASSIGN");
@@ -407,8 +409,8 @@ namespace dpl {
       return tree;
     }
     
-    Node optArray() {
-      var tree = new Node();
+    Lexeme optArray() {
+      Lexeme tree = null;
       
       match("OBRACKET");
       if (arrayPending()) {
@@ -422,8 +424,8 @@ namespace dpl {
       return check("OBRACKET");
     }
     
-    Node array() {
-      var tree = new Node();
+    Lexeme array() {
+      Lexeme tree;
       
       tree = primary();
       if (check("COMMA")) {
@@ -437,8 +439,8 @@ namespace dpl {
       return primaryPending();
     }
     
-    Node lambda() {
-      var tree = new Node();
+    Lexeme lambda() {
+      Lexeme tree;
       
       match("OPAREN");
       tree = optArgList();
@@ -466,8 +468,8 @@ namespace dpl {
       return isLambdaPending;
     }
     
-    Node dictionary() {
-      var tree = new Node();
+    Lexeme dictionary() {
+      Lexeme tree;
       
       match("OBRACE");
       tree = optDictList();
@@ -479,8 +481,8 @@ namespace dpl {
       return check("OBRACE");
     }
     
-    Node optDictList() {
-      var tree = new Node();
+    Lexeme optDictList() {
+      Lexeme tree = null;
       
       if (check("STRING")) {
         tree = dictList();
@@ -489,8 +491,8 @@ namespace dpl {
       return tree;
     }
     
-    Node dictList() {
-      var tree = new Node();
+    Lexeme dictList() {
+      Lexeme tree;
       
       tree = match("STRING");
       

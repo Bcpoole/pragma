@@ -8,6 +8,9 @@ namespace dpl {
     public string sval;
     //real rval;
 
+    public Lexeme Left;
+    public Lexeme Right;
+
     public Lexeme(string type) {
       this.type = type;
     }
