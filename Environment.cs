@@ -27,8 +27,10 @@ namespace dpl {
 
     public static void Update(string id, Node env, string val) {
       while (env != null) {
-        var vars = Car(env);
-        var vals = Cadr(env);
+        var table = Car(env);
+        var vars = Car(table);
+        var vals = Cdr(table);
+
         while (vars != null) {
           if (id == Car(vars).Value.sval) {
             Car(vals).Value.SetValue(val);
@@ -36,8 +38,8 @@ namespace dpl {
           }
           vars = Cdr(vars);
           vals = Cdr(vars);
-        } 
-        env = Cdr(Cdr(env));
+        }
+        env = Cdr(env);
       }
 
       throw new Exception(String.Format("variable '{0}' is undefined!", id));
@@ -54,6 +56,10 @@ namespace dpl {
       return Cons(env, vars,
           Cons(CreateJOINNode(), vals, Cons(
               CreateJOINNode(), env, null)));
+    }
+
+    public static Node GetParent(Node env) {
+      return Cdr(env);
     }
 
     public static void Print(Node env) {
