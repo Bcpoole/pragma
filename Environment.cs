@@ -1,16 +1,12 @@
 ﻿using System;
 
 namespace dpl {
-  public class Environment {
-    public Environment() {
-
-    }
-
-    public Node Create() {
+  public static class Environment {
+    public static Node Create() {
       return Extend(null, null, null);
     }
 
-    public string Lookup(string id, Node env) {
+    public static string Lookup(string id, Node env) {
       while (env != null) {
         var table = Car(env);
         var vars = Car(table);
@@ -29,7 +25,7 @@ namespace dpl {
       throw new Exception(String.Format("variable '{0}' is undefined!", id));
     }
 
-    public void Update(string id, Node env, string val) {
+    public static void Update(string id, Node env, string val) {
       while (env != null) {
         var vars = Car(env);
         var vals = Cadr(env);
@@ -47,14 +43,14 @@ namespace dpl {
       throw new Exception(String.Format("variable '{0}' is undefined!", id));
     }
 
-    public Node Insert(Node variable, Node val, Node env) {
+    public static Node Insert(Node variable, Node val, Node env) {
       var table = Car(env);
       SetCar(table, Cons(CreateJOINNode(), variable, Car(table)));
       SetCdr(table, Cons(CreateJOINNode(), val, Cdr(table)));
       return val;
     }
 
-    public Node Extend(Node vars, Node vals, Node env) {
+    public static Node Extend(Node vars, Node vals, Node env) {
       return Cons(env, vars,
           Cons(CreateJOINNode(), vals, Cons(
               CreateJOINNode(), env, null)));
@@ -70,7 +66,7 @@ namespace dpl {
         }
         Console.WriteLine("The environment is:");
         while (vars != null) {
-          Console.WriteLine(String.Format("\t{0} : {1}", vars.Value.sval, vals.Value.GetValue());
+          Console.WriteLine(String.Format("\t{0} : {1}", vars.Value.sval, vals.Value.GetValue()));
           
           vars = Cdr(vars);
           vals = Cdr(vars);
@@ -81,7 +77,7 @@ namespace dpl {
     }
 
     //cons functions
-    public Node Cons(Node val, Node left, Node right) {
+    public static Node Cons(Node val, Node left, Node right) {
       val.Left = left;
       val.Right = right;
 
@@ -91,14 +87,14 @@ namespace dpl {
     public static Node Car(Node cons) {
       return cons.Left;
     }
-    public void SetCar(Node cons, Node val) {
+    public static void SetCar(Node cons, Node val) {
       cons.Left = val;
     }
 
     public static Node Cdr(Node cons) {
       return cons.Right;
     }
-    public void SetCdr(Node cons, Node val) {
+    public static void SetCdr(Node cons, Node val) {
       cons.Right = val;
     }
 
