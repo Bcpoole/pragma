@@ -1,0 +1,5 @@
+myFunc() {
+	x = 7;
+}
+
+myFunc()

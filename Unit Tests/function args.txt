@@ -1,0 +1,6 @@
+myFunc(x, y) {
+	x;
+	y;
+}
+
+myFunc("Walhalla", 9);
