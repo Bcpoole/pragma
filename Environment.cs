@@ -2,22 +2,22 @@
 
 namespace dpl {
   public static class Environment {
-    public static Node Create() {
-      return Extend(null, null, null);
+    public static Lexeme Create() {
+      return Extend(null, null, null); //might need to plug in new Lexeme()
     }
 
-    public static string Lookup(string id, Node env) {
+    public static string Lookup(string id, Lexeme env) {
       while (env != null) {
         var table = Car(env);
         var vars = Car(table);
         var vals = Cdr(table);
 
         while (vars != null) {
-          if (id == Car(vars).Value.sval) {
-            return Car(vals).Value.GetValue();
+          if (id == Car(vars).sval) {
+            return Car(vals).GetValue();
           }
           vars = Cdr(vars);
-          vals = Cdr(vars);
+          vals = Cdr(vals);
         }
         env = Cdr(env);
       }
@@ -25,19 +25,19 @@ namespace dpl {
       throw new Exception(String.Format("variable '{0}' is undefined!", id));
     }
 
-    public static void Update(string id, Node env, string val) {
+    public static void Update(string id, Lexeme env, string val) {
       while (env != null) {
         var table = Car(env);
         var vars = Car(table);
         var vals = Cdr(table);
 
         while (vars != null) {
-          if (id == Car(vars).Value.sval) {
-            Car(vals).Value.SetValue(val);
+          if (id == Car(vars).sval) {
+            Car(vals).SetValue(val);
             return;
           }
           vars = Cdr(vars);
-          vals = Cdr(vars);
+          vals = Cdr(vals);
         }
         env = Cdr(env);
       }
@@ -45,88 +45,99 @@ namespace dpl {
       throw new Exception(String.Format("variable '{0}' is undefined!", id));
     }
 
-    public static Node Insert(Node variable, Node val, Node env) {
+    public static Lexeme Insert(Lexeme variable, Lexeme val, Lexeme env) {
       var table = Car(env);
-      SetCar(table, Cons(CreateJOINNode(), variable, Car(table)));
-      SetCdr(table, Cons(CreateJOINNode(), val, Cdr(table)));
-      return val;
+      SetCar(table, Cons(CreateJOINLexeme(), variable, Car(table)));
+      SetCdr(table, Cons(CreateJOINLexeme(), val, Cdr(table)));
+      return env;
     }
 
-    public static Node Extend(Node vars, Node vals, Node env) {
-      return Cons(env, vars,
-          Cons(CreateJOINNode(), vals, Cons(
-              CreateJOINNode(), env, null)));
+    public static Lexeme Extend(Lexeme vars, Lexeme vals, Lexeme env) { //broken?
+      /*return Cons(env, vars,
+          Cons(CreateJOINLexeme(), vals,
+          Cons(CreateJOINLexeme(), env, null)));*/
+      return Cons(new Lexeme("ENV"),
+        Cons(new Lexeme("VALUES"), vars, vals),
+        env);
     }
 
-    public static Node GetParent(Node env) {
+    public static Lexeme GetParent(Lexeme env) {
       return Cdr(env);
     }
 
-    public static void Print(Node env) {
+    public static void Print(Lexeme env) {
       if (env != null) {
-        var vars = Car(env);
-        var vals = Cadr(env);
+        var table = Car(env);
+        var vars = Car(table);
+        var vals = Cdr(table);
+
         while (vars != null) {
-          Console.WriteLine(String.Format("\t{0} : {1}", vars.Value.sval, vals.Value.GetValue()));
+          if (Car(vals).type == "STRING") {
+            Console.WriteLine(String.Format("\t{0} : '{1}'", Car(vars).sval, Car(vals).GetValue()));
+          }
+          else {
+            Console.WriteLine(String.Format("\t{0} : {1}", Car(vars).sval, Car(vals).GetValue()));
+          }
 
           vars = Cdr(vars);
-          vals = Cdr(vars);
+          vals = Cdr(vals);
         }
-        env = Cdr(Cdr(env));
       }
     }
-    public static void PrintAll(Node env) {
+    public static void PrintAll(Lexeme env) {
       int depth = 0;
       while (env != null) {
-        var vars = Car(env);
-        var vals = Cadr(env);
+        var table = Car(env);
+        var vars = Car(table);
+        var vals = Cdr(table);
+
         if (depth > 0) {
           Console.WriteLine("\n---Parent Environment---");
         }
         Console.WriteLine("The environment is:");
         while (vars != null) {
-          Console.WriteLine(String.Format("\t{0} : {1}", vars.Value.sval, vals.Value.GetValue()));
+          Console.WriteLine(String.Format("\t{0} : {1}", Car(vars).sval, Car(vals).GetValue()));
           
           vars = Cdr(vars);
-          vals = Cdr(vars);
+          vals = Cdr(vals);
         }
-        env = Cdr(Cdr(env));
+        env = Cdr(env);
         depth++;
       }
     }
 
     //cons functions
-    public static Node Cons(Node val, Node left, Node right) {
+    public static Lexeme Cons(Lexeme val, Lexeme left, Lexeme right) {
       val.Left = left;
       val.Right = right;
 
       return val;
     }
 
-    public static Node Car(Node cons) {
+    public static Lexeme Car(Lexeme cons) {
       return cons.Left;
     }
-    public static void SetCar(Node cons, Node val) {
+    public static void SetCar(Lexeme cons, Lexeme val) {
       cons.Left = val;
     }
 
-    public static Node Cdr(Node cons) {
+    public static Lexeme Cdr(Lexeme cons) {
       return cons.Right;
     }
-    public static void SetCdr(Node cons, Node val) {
+    public static void SetCdr(Lexeme cons, Lexeme val) {
       cons.Right = val;
     }
 
-    public static Node Cadr(Node cons) {
+    public static Lexeme Cadr(Lexeme cons) {
       return cons.Right.Left;
     }
 
-    public static Node Caddr(Node cons) {
+    public static Lexeme Caddr(Lexeme cons) {
       return cons.Right.Right.Left;
     }
 
-    private static Node CreateJOINNode() {
-      return new Node(new Lexeme("JOIN"));
+    private static Lexeme CreateJOINLexeme() {
+      return new Lexeme("JOIN");
     }
   }
 }
