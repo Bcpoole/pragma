@@ -3,7 +3,7 @@
 namespace dpl {
   public static class Environment {
     public static Lexeme Create() {
-      return Extend(null, null, null); //might need to plug in new Lexeme()
+      return Extend(null, null, null);
     }
 
     public static string Lookup(string id, Lexeme env) {
@@ -52,10 +52,7 @@ namespace dpl {
       return env;
     }
 
-    public static Lexeme Extend(Lexeme vars, Lexeme vals, Lexeme env) { //broken?
-      /*return Cons(env, vars,
-          Cons(CreateJOINLexeme(), vals,
-          Cons(CreateJOINLexeme(), env, null)));*/
+    public static Lexeme Extend(Lexeme vars, Lexeme vals, Lexeme env) {
       return Cons(new Lexeme("ENV"),
         Cons(new Lexeme("VALUES"), vars, vals),
         env);
