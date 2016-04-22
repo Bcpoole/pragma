@@ -60,6 +60,26 @@ namespace dpl {
               CreateJOINNode(), env, null)));
     }
 
+    public static void Print(Node env) {
+      int depth = 0;
+      while (env != null) {
+        var vars = Car(env);
+        var vals = Cadr(env);
+        if (depth > 0) {
+          Console.WriteLine("\n---Parent Environment---");
+        }
+        Console.WriteLine("The environment is:");
+        while (vars != null) {
+          Console.WriteLine(String.Format("\t{0} : {1}", vars.Value.sval, vals.Value.GetValue());
+          
+          vars = Cdr(vars);
+          vals = Cdr(vars);
+        }
+        env = Cdr(Cdr(env));
+        depth++;
+      }
+    }
+
     //cons functions
     public Node Cons(Node val, Node left, Node right) {
       val.Left = left;
@@ -68,29 +88,29 @@ namespace dpl {
       return val;
     }
 
-    public Node Car(Node cons) {
+    public static Node Car(Node cons) {
       return cons.Left;
     }
     public void SetCar(Node cons, Node val) {
       cons.Left = val;
     }
 
-    public Node Cdr(Node cons) {
+    public static Node Cdr(Node cons) {
       return cons.Right;
     }
     public void SetCdr(Node cons, Node val) {
       cons.Right = val;
     }
 
-    public Node Cadr(Node cons) {
+    public static Node Cadr(Node cons) {
       return cons.Right.Left;
     }
 
-    public Node Caddr(Node cons) {
+    public static Node Caddr(Node cons) {
       return cons.Right.Right.Left;
     }
 
-    private Node CreateJOINNode() {
+    private static Node CreateJOINNode() {
       return new Node(new Lexeme("JOIN"));
     }
   }
