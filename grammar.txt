@@ -15,10 +15,10 @@ argList : expr
         | expr COMMA argList
 
 expr  : primary
-      | primary op expr optExprList
+      | primary op expr
+      | primary op expr conditional
 
-optExprList : *empty*
-            | OR expr
+conditional : OR expr
             | AND expr
 
 primary : ID
@@ -69,6 +69,7 @@ op  : PLUS
     | GREATERTHAN_EQUALTO
     | AND
     | OR
+    | DOT
 
 whileLoop : WHILE OPAREN expr CPAREN block
 
