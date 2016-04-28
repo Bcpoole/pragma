@@ -5,21 +5,35 @@ funcDef  : ID OPAREN optParamList CPAREN block
 optParamList  : *empty*
               | paramList
 
-paramList : expr
-          | expr COMMA paramList
+paramList : expr1
+          | expr1 COMMA paramList
             
 optArgList  : *empty*
             | argList
 
-argList : expr
-        | expr COMMA argList
+argList : expr1
+        | expr1 COMMA argList
 
-expr  : primary
-      | primary op expr
-      | primary op expr conditional
-
-conditional : OR expr
-            | AND expr
+expr1   : expr1 op1 expr2 | expr2
+op1     : PLUS_TO | MINUS_TO | TIMES_TO | DIVIDES_TO | MOD_TO | EXPN_TO | ASSIGN
+expr2   : expr2 op2 expr3 | expr3
+op2     : OR
+expr3   : expr3 op3 expr4 | expr4
+op3     : AND
+expr4   : expr4 op4 expr5 | expr5
+op4     : EQUAL | NOT_EQUAL
+expr5   : expr5 op5 expr6 | expr6
+op5     : LESSTHAN | LESSTHAN_EQUALTO | GREATERTHAN | GREATERTHAN_EQUALTO
+expr6   : expr6 op6 expr7 | expr7
+op6     : PLUS | MINUS
+expr7   : expr7 op7 expr8 | expr8
+op7     : TIMES | DIVIDES | MOD
+expr8   : expr8 op8 expr9 | expr9
+op8     : EXPN
+expr9   : expr9 op9 expr10 | expr10
+op9     : INCREMENT | DECREMENT
+expr10   : expr10 op10 primary | primary
+op10     : DOT
 
 primary : ID
         | STRING
@@ -41,42 +55,17 @@ statementList : statement
 
 statement : varDef SEMI
           | whileLoop
-          | expr SEMI
+          | expr1 SEMI
           | ifStatement
-          | RETURN expr SEMI
+          | RETURN expr1 SEMI
           | funcDef
 
-op  : PLUS
-    | INCREMENT
-    | PLUS_TO
-    | MINUS
-    | DECREMENT
-    | MINUS_TO
-    | TIMES
-    | TIMES_TO
-    | DIVIDES
-    | DIVIDES_TO
-    | MOD
-    | MOD_TO
-    | EXPN
-    | EXPN_TO
-    | ASSIGN
-    | EQUAL
-    | NOT_EQUAL
-    | LESSTHAN
-    | LESSTHAN_EQUALTO
-    | GREATERTHAN
-    | GREATERTHAN_EQUALTO
-    | AND
-    | OR
-    | DOT
+whileLoop : WHILE OPAREN expr1 CPAREN block
 
-whileLoop : WHILE OPAREN expr CPAREN block
-
-ifStatement : IF OPAREN expr CPAREN block optElif
+ifStatement : IF OPAREN expr1 CPAREN block optElif
 
 optElif : optElse
-        | ELIF OPAREN expr CPAREN block optElif
+        | ELIF OPAREN expr1 CPAREN block optElif
 
 optElse : *empty*
         | ELSE block
@@ -84,7 +73,7 @@ optElse : *empty*
 varDef  : ID optAssign
 
 optAssign : *empty*
-          | ASSIGN expr
+          | ASSIGN expr1
 
 optArray : OBRACKET CBRACKET
         | OBRACKET array CBRACKET
