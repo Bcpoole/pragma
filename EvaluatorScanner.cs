@@ -5,7 +5,7 @@ using static dpl.Environment;
 using static dpl.Evaluator;
 
 namespace dpl {
-  public class EnvironmentScanner {
+  public class EvaluatorScanner {
     static public int Main(string[] args) {
       if (args.Length < 1) {
         Console.WriteLine("Error! Too few arguments! Provide a single filename for the Lexer!");
@@ -39,7 +39,7 @@ namespace dpl {
 
       var pt = new Recognizer(tokens).ProgramTree;
       var env = Create();
-      var evald = Eval(pt, env);
+      Eval(pt, env);
     }
   }
 }

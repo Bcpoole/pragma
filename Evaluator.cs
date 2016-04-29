@@ -916,8 +916,6 @@ namespace dpl {
         var newString = baseStr.Replace(removeStr, "");
         return new Lexeme("STRING", newString);
       }
-
-      throw new Exception("Invalid MINUS!" + ExceptionTypesLeftRight(left, right));
     }
 
     private static Lexeme EvalIncrement(Lexeme t, Lexeme env) {
