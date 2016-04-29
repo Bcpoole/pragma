@@ -209,7 +209,7 @@ namespace dpl {
     /// Returns the nth Fibonacci term
     /// </summary>
     private static Lexeme EvalFibonacci(Lexeme tree, Lexeme env) {
-      int n = Convert.ToInt32(Eval(tree.Left.Left.Left, env).GetValue());
+      int n = Convert.ToInt32(Eval(tree.Left.Left.Left, env).GetValue()) - 1;
 
       double sqrt5 = Math.Sqrt(5);
       double p1 = (1 + sqrt5) / 2;
@@ -392,8 +392,18 @@ namespace dpl {
       var arrName = t.Left.sval;
       var arr = Environment.Lookup(arrName, env);
 
-      arr.aval[idx] = val;
-      return t;
+      if (arr.type == "ARRAY") {
+        arr.aval[idx] = val;
+        return t;
+      } else if (arr.type == "STRING") {
+        var sb = new System.Text.StringBuilder(arr.sval);
+        sb[idx] = Convert.ToChar(val);
+        arr.sval = sb.ToString();
+
+        return t;
+      } else {
+        throw new Exception("Invalid type for indexing! Type: " + arr.type);
+      }
     }
 
     private static Lexeme EvalArrayGetIndex(Lexeme tree, Lexeme env) {
