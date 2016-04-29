@@ -152,7 +152,8 @@ x = x - "in"; //"the ra  spa falls maly on the pla"
 x -= "the "; //"ra  spa falls maly on pla"
 ```
 
-##Functions
+##Scopes
+###Functions
 Functions should look very familiar. One thing to note: return is purely syntactical sugar. The last thing evaluated will always return. Also, functions need a body!
 ```
 myFunc() {
@@ -174,7 +175,7 @@ nonerang(x) { //returns 5
 
 ```
 
-##Objects
+###Objects
 Objects are functions that end with this. Pass in all arguments needed unless you want strange behavior! Non-parameter fields are static.
 ```
 Wrapper(val) {
@@ -198,7 +199,7 @@ x.type; //"foo"
 y.type; //"foo"
 ```
 
-##Lambdas
+###Lambdas
 You (should) know what lambdas are. Note: You must end them with a semicolon.
 ```
 () => {
