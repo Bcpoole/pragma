@@ -44,6 +44,29 @@ primary : ID
         | ID OPAREN optArgList CPAREN
         | optArray
         | dictionary
+        | builtin
+        
+builtin : PRINTLN OPAREN optArgList CPAREN
+        | PRINT OPAREN optArgList CPAREN
+        | NOW
+        | TODAY
+        | KILL
+        | SLEEP
+        | SLEEPLONG
+        | THREAD OPAREN optStatementList CPAREN
+        | RANDOM OPAREN optArgList CPAREN
+        | COIN
+        | DICE
+        | D4
+        | D8
+        | D10
+        | D12
+        | D20
+        | D100
+        | CREATOR
+        | FIB OPAREN expr1 CPAREN
+        | LEN OPAREN expr1 CPAREN
+        | COMPARE_STRINGS OPAREN STRING COMMA STRING CPAREN
 
 block : OBRACE optStatementList CBRACE
 

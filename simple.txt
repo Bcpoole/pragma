@@ -1,6 +1,6 @@
-myFunc (x) {
-  x = 7;
+myFunc (a, y, z) {
+  a = 7;
 }//myFunc(33);
 
 //myFunc(34);
-myFunc(35);
+myFunc(35, 1, 2);

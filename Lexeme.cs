@@ -7,6 +7,7 @@ namespace dpl {
     public int ival;
     public string sval;
     //real rval;
+    public object[] aval;
 
     public Lexeme Left;
     public Lexeme Right;
@@ -23,6 +24,11 @@ namespace dpl {
     public Lexeme(string type, string sval) {
       this.type = type;
       this.sval = sval;
+    }
+
+    public Lexeme(string type, object[] aval) {
+      this.type = type;
+      this.aval = aval;
     }
 
     public void Print() {
@@ -58,6 +64,14 @@ namespace dpl {
       }
       else {
         throw new Exception("Invalid value type");
+      }
+    }
+
+    public void SetArrayValue(object[] val) {
+      if (type == "ARRAY") {
+        aval = val;
+      } else {
+        throw new Exception("SetArrayValue() called for invalid value type! Type: " + type);
       }
     }
   }

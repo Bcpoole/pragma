@@ -31,7 +31,7 @@ namespace dpl {
       val2.Right = val3;
       Environment.Insert(vari3, val3, childEnv);
 
-      env = Environment.Extend(childEnv.Left.Left, childEnv.Left.Right, env); //something not right here... (tried with childEnv, don't think I need that variable though)
+      env = Environment.Extend(childEnv.Left.Left, childEnv.Left.Right, env);
       Console.WriteLine("The local environment is:");
       Environment.Print(env);
       Console.WriteLine("The environment is:");

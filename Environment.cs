@@ -4,18 +4,24 @@ using static dpl.ConsMethods;
 namespace dpl {
   public static class Environment {
     public static Lexeme Create() {
-      return Extend(null, null, null); //might need to plug in new Lexeme()
+      return Extend(null, null, null);
     }
 
-    public static string Lookup(string id, Lexeme env) {
+    public static Lexeme Lookup(string id, Lexeme env) {
+      if (id == "this") {
+        return env;
+      }
+
       while (env != null) {
         var table = Car(env);
         var vars = Car(table);
         var vals = Cdr(table);
 
         while (vars != null) {
-          if (id == Car(vars).sval) {
-            return Car(vals).GetValue();
+          if (vars.type == "JOIN" && id == Car(vars).sval) {
+            return Car(vals);
+          } else if (id == vars.sval) {
+            return vals;
           }
           vars = Cdr(vars);
           vals = Cdr(vals);
@@ -33,8 +39,35 @@ namespace dpl {
         var vals = Cdr(table);
 
         while (vars != null) {
-          if (id == Car(vars).sval) {
+          if (vars.type == "JOIN" && id == Car(vars).sval) {
             Car(vals).SetValue(val);
+            return;
+          } else if (id == vars.sval) {
+            vals.SetValue(val);
+            return;
+          }
+          vars = Cdr(vars);
+          vals = Cdr(vals);
+        }
+        env = Cdr(env);
+      }
+
+      throw new Exception(String.Format("variable '{0}' is undefined!", id));
+    }
+
+    public static void Update(string id, Lexeme env, object[] val) {
+      while (env != null) {
+        var table = Car(env);
+        var vars = Car(table);
+        var vals = Cdr(table);
+
+        while (vars != null) {
+          if (vars.type == "JOIN" && id == Car(vars).sval) {
+            Car(vals).SetArrayValue(val);
+            return;
+          }
+          else if (id == vars.sval) {
+            vals.SetArrayValue(val);
             return;
           }
           vars = Cdr(vars);
@@ -53,10 +86,7 @@ namespace dpl {
       return env;
     }
 
-    public static Lexeme Extend(Lexeme vars, Lexeme vals, Lexeme env) { //broken?
-      /*return Cons(env, vars,
-          Cons(CreateJOINLexeme(), vals,
-          Cons(CreateJOINLexeme(), env, null)));*/
+    public static Lexeme Extend(Lexeme vars, Lexeme vals, Lexeme env) {
       return Cons(new Lexeme("ENV"),
         Cons(new Lexeme("VALUES"), vars, vals),
         env);

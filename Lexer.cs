@@ -55,7 +55,7 @@ namespace dpl {
             pushbackCharacter(ch);
           }
         } else if (nextCh == '*') { //block comment
-          while (ch != '*' && peekCharacter() != '/') {
+          while (!(ch == '*' && peekCharacter() == '/')) {
             ch = getCharacter();
           }
           getCharacter(); //get / of block comment
@@ -103,6 +103,8 @@ namespace dpl {
           return new Lexeme("COLON");
         case ',':
           return new Lexeme("COMMA");
+        case '.':
+          return new Lexeme("DOT");
         //operations
         case '+':
           nextCh = getCharacter();
@@ -270,6 +272,30 @@ namespace dpl {
         case "elif": return new Lexeme("ELIF");
         case "else": return new Lexeme("ELSE");
         case "return": return new Lexeme("RETURN");
+        //built-ins
+        case "println": return new Lexeme("PRINTLN");
+        case "print": return new Lexeme("PRINT");
+        case "now": return new Lexeme("NOW");
+        case "today": return new Lexeme("TODAY");
+        case "kill": return new Lexeme("KILL");
+        case "sleep": return new Lexeme("SLEEP");
+        case "sleeplong": return new Lexeme("SLEEPLONG");
+        case "thread": return new Lexeme("THREAD");
+        case "random": return new Lexeme("RANDOM");
+        case "coin": return new Lexeme("COIN");
+        case "dice": return new Lexeme("DICE");
+        case "d2": return new Lexeme("COIN");
+        case "d4": return new Lexeme("D4");
+        case "d6": return new Lexeme("DICE");
+        case "d8": return new Lexeme("D8");
+        case "d10": return new Lexeme("D10");
+        case "d12": return new Lexeme("D12");
+        case "d20": return new Lexeme("D20");
+        case "d100": return new Lexeme("D100");
+        case "creator": return new Lexeme("CREATOR");
+        case "fib": return new Lexeme("FIB");
+        case "len": return new Lexeme("LEN");
+        case "compareStrings": return new Lexeme("COMPARE_STRINGS");
         default: return new Lexeme("ID", buffer);
       }
     }

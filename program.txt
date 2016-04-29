@@ -16,13 +16,12 @@ func1() {
   
   }
   
-  x = 60;
-  () => { 7; };
-  (x) => { x; };
-  myLambda = () => { "lambda assigned to variable"; };
+  () => { };
+  (7) => { };
+  myLambda = () => { };
   
-  //smallDict = {"five" : 5}; //should be implemented via dpl, not via host lang
-  //longDict = {"one" : 1, "two" : 2};
+  smallDict = {"five" : 5};
+  longDict = {"one" : 1, "two" : 2};
 
   func2(40000);
 }
@@ -41,10 +40,6 @@ func4() {
   i = 0;
   while (i < 10) {
     i++;
-  }
-  
-  while (i > 3) {
-    i--;
   }
   
   if (i > 8) {
@@ -94,5 +89,3 @@ func4() {
   
   return 0;
 }
-
-var x = func1();

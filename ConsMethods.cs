@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace dpl {
   static class ConsMethods {
-    //cons functions
     public static Lexeme Cons(Lexeme val, Lexeme left, Lexeme right) {
       val.Left = left;
       val.Right = right;
