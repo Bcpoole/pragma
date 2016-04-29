@@ -4,7 +4,56 @@
 [TOC]
 
 #Description
-**Pragma** is a dynamic language built off of the [C#](https://msdn.microsoft.com/en-us/library/kx37x362.aspx?f=255&MSPPError=-2147217396) [Mono](http://www.mono-project.com/) (now sponsored by [Microsoft](https://www.microsoft.com/en-us/)).
+**Pragma** is a dynamic language built off of the [C#](https://msdn.microsoft.com/en-us/library/kx37x362.aspx?f=255&MSPPError=-2147217396) [Mono](http://www.mono-project.com/) (now sponsored by [Microsoft](https://www.microsoft.com/en-us/)) written as a final project for CS 403 - Programming Languages.
+
+#Setup and Run
+##Mono
+As per [StackOverflow](http://askubuntu.com/questions/497358/how-to-install-mono-on-ubuntu-64-bit-v14-04):
+Install with apt-get: *(Ubuntu, Debian, and derivatives)*
+```shell
+echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list 
+
+sudo apt-get update
+
+sudo apt-get install mono-complete
+```
+
+Using a different distro or need help? [Try the Mono Website's Download instructions.](http://www.mono-project.com/docs/getting-started/install/linux/)
+
+###I have Make!
+
+*(if you want to speed up the build process, remove all but the last line under **make build**)*
+```shell
+#build - or -> make build
+make
+
+#run
+make run <filename>
+```
+
+if you wish to clean up the directory run:
+```shell
+make clean
+```
+
+###I don't have Make :(
+
+```shell
+#build
+mcs EvaluatorScanner.cs Evaluator.cs Environment.cs Recognizer.cs Lexer.cs Lexeme.cs ConsMethods.cs
+
+#run
+mono EvaluatorScanner.exe <filename>
+#or
+evaluator <filename>
+```
+
+##Visual Studio
+*For those of you who are Mono-challenged, or simply don't want to.*
+
+1. Throw the files into a project
+2. Set the file you want to compile and run in the command-line args
+3. Run!
 
 #Features
 ##Variables
