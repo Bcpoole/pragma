@@ -371,16 +371,6 @@ namespace dpl {
       if (args == null) {
         Console.WriteLine();
       } else {
-        try {
-          var q = args.Left.Left;
-          var qq = Environment.Lookup(q.sval, env);
-          var z = args.Left.Right.Left;
-          var zz = Eval(z, env);
-          //var a = Environment.Lookup()
-          var zzz = Eval(z, env).GetEnvValue();
-          var x = Eval(args.Left, env).GetEnvValue();
-          var y = 7;
-        } catch (Exception ex) { }
         string message = Eval(args.Left, env).GetValue();
         while (args.Right != null) {
           message += Eval(args.Right.Left, env).GetValue();
@@ -659,12 +649,11 @@ namespace dpl {
           }
         }
         return val;
-      } else if(t.Right.type == "ID" && t.Right.Left != null && t.Right.Left.type == "ID") {
+      } else if(t.Right.type == "ID" && t.Right.Left != null && t.Right.Left.type == "ID") { // x = obj.method(params);
         var x = Eval(t.Right, env);
         var y = Eval(t.Right.Left, x);
         var z = Eval(y.Right, env);
-        return z;
-        throw new NotImplementedException();
+        return z; //Didn't figure out this part so I'm returning some random Eval'd thing
       } else if (t.Right.type == "array") {
         return EvalArray(t.Right, env);
       } else if (t.Left != null && t.Left.Right != null && t.Left.Right.type == "INTEGER") { //array with index
