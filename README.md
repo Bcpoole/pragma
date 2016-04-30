@@ -67,6 +67,16 @@ x; //returns array [4,2];
 //Situationally Bad:
 y; //only works if declared beforehand
 ```
+Also features aliasing!
+```
+a = 5;
+b = a;
+println(a); //5
+println(b); //5
+a = 10;
+println(a); //10
+println(b); //10
+```
 
 ##Booleans
 Currently booleans are represented as integers.
