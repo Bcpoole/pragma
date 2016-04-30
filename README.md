@@ -248,6 +248,18 @@ outterFunc() {
 outterFunc();
 ```
 
+<img src="http://i.qkme.me/3stqet.jpg" alt="Billy Mays supports Pragma!" height="200px"/>
+Variables can be set to functions.
+```
+myFunc() {
+  x = "There's no way you'll ever see me without a function call!";
+}
+
+a = myFunc;
+
+println(a()); //Gasp! We got x from calling a!
+```
+
 ###Objects
 Objects are functions that end with this. Pass in all arguments needed unless you want strange behavior! Non-parameter fields are static.
 ```
@@ -279,6 +291,14 @@ You (should) know what lambdas are. Note: You must end them with a semicolon.
   println("Hello");
   println("Goodbye");
 };
+```
+
+Variables can be set to lambdas too!
+```
+myLambda = () => {
+	5;
+};
+myLambda(); //5
 ```
 
 ##Precedence
