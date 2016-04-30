@@ -1,0 +1,7 @@
+// functions aren't declared with an =
+
+myFunc() = {
+  println("The equals breaks the code.");
+}
+
+myFunc();

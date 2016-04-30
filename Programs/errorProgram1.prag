@@ -1,0 +1,8 @@
+//Consistent styling mandates that ALL blocks (evne one-liners) be encased in curly braces
+
+if (1 > 5) {
+  0;
+} else
+  1;
+  
+ //else should have { }

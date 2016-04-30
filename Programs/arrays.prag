@@ -1,0 +1,11 @@
+emptyArr = [];
+oneEleArr = [4];
+finalCountdown = [3, 2, 1];
+
+finalCountdown[1]; //returns 2;
+finalCountdown[2] = 0; //sets index 2 to zero
+
+x = "but wait! I'm a string!";
+x[4]; //w
+x[0] = "B"; //must be a single character
+println(x); //"But wait! I'm a string!" Take that bad grammar!
