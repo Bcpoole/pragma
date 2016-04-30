@@ -544,6 +544,10 @@ namespace dpl {
       var args = GetFuncCallArgs(t);
       var closure = GetFuncCallClosure(t, env);
 
+      if (closure.type != "CLOSURE") {
+        return Eval(closure, env);
+      }
+
       var parameters = GetClosureParams(closure);
       var body = GetClosureBody(closure);
       var senv = GetClosureEnvironment(closure);

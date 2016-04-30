@@ -1,0 +1,30 @@
+println("=====functions=====");
+outterFunc() {
+  println("Hello World");
+  
+  innerFunc() {
+    println("Goodbye Moon");
+  }
+  innerFunc();
+}
+
+outterFunc();
+
+myFunc() {
+  x = "There's no way you'll ever see me without a function call!";
+}
+
+a = myFunc;
+
+println(a()); //Gasp! We got x from calling a!
+
+println("=====Lambdas=====");
+() => {
+  println("Hello");
+  println("Goodbye");
+};
+
+myLambda = () => {
+	"Thou hath confined a lambda to a variable and now summoned it!";
+};
+println(myLambda()); //5
