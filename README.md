@@ -224,6 +224,20 @@ nonerang(x) { //returns 5
 
 ```
 
+And function in functions!
+```
+outterFunc() {
+  println("Hello World");
+  
+  innerFunc() {
+    println("Goodbye Moon");
+  }
+  innerFunc();
+}
+
+outterFunc();
+```
+
 ###Objects
 Objects are functions that end with this. Pass in all arguments needed unless you want strange behavior! Non-parameter fields are static.
 ```
