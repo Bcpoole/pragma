@@ -1,6 +1,0 @@
-myFunc (a, y, z) {
-  a = 7;
-}//myFunc(33);
-
-//myFunc(34);
-myFunc(35, 1, 2);
