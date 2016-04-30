@@ -721,6 +721,12 @@ namespace dpl {
         else {
           return new Lexeme("INTEGER", 0);
         }
+      } else if (left.type == "STRING" && right.type == "STRING") {
+        if (left.sval != right.sval) {
+          return new Lexeme("INTEGER", 1);
+        } else {
+          return new Lexeme("INTEGER", 0);
+        }
       }
 
       throw new Exception("Invalid NOT_EQUAL!" + ExceptionTypesLeftRight(left, right));
@@ -734,6 +740,12 @@ namespace dpl {
           return new Lexeme("INTEGER", 1);
         }
         else {
+          return new Lexeme("INTEGER", 0);
+        }
+      } else if (left.type == "STRING" && right.type == "STRING") {
+        if (left.sval == right.sval) {
+          return new Lexeme("INTEGER", 1);
+        } else {
           return new Lexeme("INTEGER", 0);
         }
       }
