@@ -1,0 +1,12 @@
+sum = 0;
+count = 0;
+
+println("Rolling a d20 until your sum is at least 100...");
+while (sum < 100) {
+  roll = d20;
+  println("  Roll: " + roll);
+  sum += roll;
+  count++;
+}
+
+println("It took you " + count + " rolls of a d100 to sum over 100.");

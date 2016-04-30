@@ -548,8 +548,7 @@ namespace dpl {
       return tree;
     }
     bool op1Pending() {
-      return check("INCREMENT") || check("PLUS_TO") || check("DECREMENT") || check("MINUS_TO") || check("TIMES_TO") || check("DIVIDES_TO") ||
-        check("MOD_TO") || check("EXPN_TO") || check("ASSIGN");
+      return check("PLUS_TO") || check("MINUS_TO") || check("TIMES_TO") || check("DIVIDES_TO") || check("MOD_TO") || check("EXPN_TO") || check("ASSIGN");
     }
 
     Lexeme op2() {
@@ -669,7 +668,7 @@ namespace dpl {
         return tree;
     }
     bool op9Pending() {
-      return check("INCREMENET") || check("DECREMENT");
+      return check("INCREMENT") || check("DECREMENT");
     }
 
     Lexeme op10() {
