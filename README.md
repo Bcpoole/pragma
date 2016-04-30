@@ -153,6 +153,7 @@ emptyArr = [];
 oneEleArr = [4];
 finalCountdown = [3, 2, 1];
 
+println(finalCount); //prints [3, 2, 1] because arrays should be printable :)
 finalCountdown[1]; //returns 2;
 finalCountdown[2] = 0; //sets index 2 to zero
 
