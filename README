@@ -1,1 +1,1 @@
-cat README.md
+cat README.md && printf "\n\nThe README.md is best experienced with a Markdown reader" && printf "\nDon't have one? Good online example: https://stackedit.io/editor"

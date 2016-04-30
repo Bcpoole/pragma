@@ -13,55 +13,60 @@ build:
 
 run:
 	mono EvaluatorScanner.exe $(RUN_ARGS)
-
 	
 cat-error1:
-	cat grammar.txt
+	cat Programs/errorProgram1.prag
 
 run-error1:
-	echo run-error1
+	recognizer Programs/errorProgram1.prag
 
 cat-error2:
-	echo cat-error2
+	cat Programs/errorProgram2.prag
 
 run-error2:
-	cat grammar.txt
+	recognizer Programs/errorProgram2.prag
 
 cat-error3:
-	cat grammar.txt
+	cat Programs/errorProgram3.prag
 
 run-error3:
-	cat grammar.txt
+	recognizer Programs/errorProgram3.prag
 
 cat-arrays:
-	cat grammar.txt
+	cat Programs/arrays.prag
 
 run-arrays:
-	cat grammar.txt
+	evaluator Programs/arrays.prag;
 
 cat-conditionals:
-	cat grammar.txt
+	cat Programs/conditionals.prag
 
 run-conditionals:
-	cat grammar.txt
+	evaluator Programs/conditionals.prag
 
 cat-recursion:
-	cat grammar.txt
+	cat Programs/recursion.prag
 
 run-recursion:
-	cat grammar.txt
+	evaluator Programs/recursion.prag
 
 cat-iteration:
-	cat grammar.txt
+	cat Programs/iteration.prag
 
 run-iteration:
-	cat grammar.txt
+	evaluator Programs/iteration.prag
 
 cat-functions:
-	cat grammar.txt
+	cat Programs/functions.prag
 
 run-functions:
-	cat grammar.txt
+	evaluator Programs/functions.prag
+	
+cat-problem:
+	cat Programs/dictionary.prag
+	
+run-problem:
+	printf "I had a strange problem calling an object's methods that I was unable to solve to no working program for this :("
 
 clean:
 	rm *.exe
