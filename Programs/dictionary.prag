@@ -1,0 +1,195 @@
+Node(key, value, left, right, color) {
+  this;
+}
+
+RedBlackTree(root, freshNode, currentNode) {
+  freshNode = Node("", "", "", "", "black");
+  freshNode.left = Node("", "", "", "", "black");
+  freshNode.right = Node("", "", "", "", "black");
+  root = Node("", "", "", "", "black");
+  parentNode = Node("", "", "", "", "black");
+  grandparentNode = Node("", "", "", "", "black");
+  tempNode = Node("", "", "", "", "black");
+  
+  compare(item, node) {
+    if (node.key != root.key) {
+      compareTo(item, node.key);
+    } else  {
+      1;
+    }
+  }
+  
+  search(key) {
+    println(":(");
+    freshNode.key = key;
+    currentNode = root.right;
+    
+    flag = 1;
+    returnVal = "";
+    while(flag) {
+      if (compare(data, currentNode) < 0) {
+        currentNode = currentNode.left;
+      } elif (compare(data, currentNode) > 0) {
+        currentNode = currentNode.right;
+      } elif (currentNode != freshNode) {
+        flag = 0;
+        returnVal = currentNode.key;
+      } else {
+        flag = 0;
+        returnVal = "";
+      }
+      
+      returnVal;
+    }
+  }
+  
+  displayFromRoot() {
+    display(root.right);
+  }
+  
+  display(node) {
+    if (node.value != "") {
+      display(node.left);
+      println(node.value);
+      display(node.right);
+    }
+  }
+  
+  insert(item) {
+    println("yo");
+    currentNode = root;
+    parentNode = root;
+    grandparentNode = root;
+    freshNode.key = item;
+    
+    returnedVal = 0;
+    
+    while(compare(item, currentNode) != 0) {
+      tempNode = grandparentNode;
+      grandparentNode = parentNode;
+      parentNode = currentNode;
+      
+      returnedVal = compare(item, currentNode);
+      
+      if (returnedVal < 0) {
+        currentNode = currentNode.left;
+      } else {
+        currentNode = currentNode.right;
+      }
+      
+      if (currentNode.left.color == "red" && currentNode.red.color == "red") {
+        ReArrange(item);
+      }
+    }
+    
+    if (currentNode.key == freshNode.key) {
+      currentNode = Node(item, 5, freshNode, freshNode, "black"); //need to handle value
+      
+      if (compare(item, parentNode) < 0) {
+        parentNode.left = currentNode;
+      } else {
+        parentNode.red = currentNode;
+      }
+      
+      ReArrange(item);
+    }
+  }
+  
+  ReArrange(item) {
+    currentNode.color = "red";
+    currentNode.left.color = "black";
+    currentNode.right.color = "black";
+    
+    if (parentNode.color == "red") {
+      grandparentNode.color = "red";
+      
+      compareWithGrandParentNode = compare(item, grandparentNode) < 0;
+      compareWithParentNode = compare(item, parentNode) < 0;
+      
+      if (compareWithGrandParentNode != compareWithParentNode) {
+        parentNode = rotate(item, grandparentNode);
+      }
+      
+      currentNode = rotate(item, tempNode);
+      currentNode.color = "black";
+    }
+    
+    root.right.color = "black";
+  }
+  
+  rotate(item, parentNode) {
+    val = 0;
+    
+    if (compare(item, parentNode) < 0) {
+      val = compare(item, parentNode.left);
+      
+      if (val < 0) {
+        parentNode.left = rotateNode(parentNode.left, "left");
+      } else {
+        parentNode.left = rotateNode(parentNode.left, "right");
+      }
+      
+      parentNode.left;
+    } else {
+      val = compare(item, parentNode.right);
+      
+      if (val < 0) {
+        parentNode.right = rotateNode(parentNode.right, "left");
+      } else {
+        parentNode.right = rotateNode(parentNode.red, "right");
+      }
+      
+      parentNode.right;
+    }
+  }
+  
+  rotateNode(node, direction) {
+    if (direction == "left") {
+      tempNode = node.left;
+      node.left = tempNode.right;
+      tempNode.red = node;
+      
+      tempNode;
+    } else {
+      tempNode = node.right;
+      node.red = tempNode.left;
+      tempNode.left = node;
+      
+      tempNode;
+    }
+  }
+
+  this;
+}
+
+redBlackTree = RedBlackTree(Node("", "", "", "", "black"), Node("", "", "", "", "black"), Node("", "", "", "", "black"));
+println("about to assign x...");
+x = redBlackTree.insert("A"); //not calling insert :/
+println("x assigned");
+x(); //NOTE: this calls the function, but now running into new erro but I'm going to bed...
+println("A inserted");
+// redBlackTree.insert("D");
+// redBlackTree.insert("E");
+// redBlackTree.insert("T");
+// redBlackTree.insert("U");
+// redBlackTree.insert("B");
+// redBlackTree.insert("C");
+// redBlackTree.insert("X");
+
+p = redBlackTree.search("A"); //not calling search :(((((())))))
+p();
+
+//redBlackTree.display();
+
+println(p.currentNode);
+x = p;
+println(x.key);
+
+println("The key " + p.currentNode + " has been found.");
+
+// myFunc(x) {
+//   x;
+// }
+
+// a = myFunc(5);
+// println(a);

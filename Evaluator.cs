@@ -633,7 +633,9 @@ namespace dpl {
     }
 
     private static Lexeme EvalAssign(Lexeme t, Lexeme env) {
-      if (t.Left != null) { //object reference
+      if (t.Left != null && t.Left.Right != null && t.Left.Right.type == "INTEGER") { //array with index
+        return EvalArraySetIndex(t, env);
+      } else if (t.Left != null) { //object reference
         var obj = Environment.Lookup(t.Left.sval, env);
         var field = t.Left.Left;
         Lexeme val = null;
@@ -656,8 +658,6 @@ namespace dpl {
         return z; //Didn't figure out this part so I'm returning some random Eval'd thing
       } else if (t.Right.type == "array") {
         return EvalArray(t.Right, env);
-      } else if (t.Left != null && t.Left.Right != null && t.Left.Right.type == "INTEGER") { //array with index
-        return EvalArraySetIndex(t, env);
       } else {
         return Eval(t.Right, env);
       }
