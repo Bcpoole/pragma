@@ -1,0 +1,35 @@
+if (1 == 2) {
+  println("ERROR!");
+}
+
+if (1 >= 1) {
+  println("if");
+}
+
+if (1 == 2) {
+  println("ERROR!");
+} elif ("Couch" == "Couch") {
+  println("elif");
+}
+
+if (1 == 2) {
+  println("ERROR!");
+} elif ("couch" == "db") {
+  println("ERROR!");
+} elif ("CoUCH" == "couch") {
+  println("chained elif");
+}
+
+if (50 != 50) {
+  println("ERROR");
+} else {
+  println("else of if");
+}
+
+if ("cat" == "hat") {
+  println("ERROR");
+} elif ("42" == "blue") {
+  println("ERROR");
+} else {
+  println("else of if-elif");
+}

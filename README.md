@@ -115,7 +115,7 @@ if (1 ==1)
 ```
 
 ##Comparison
-Standard comparisons.
+Integer Comparisons
 ```
 1 == 1;
 1 != 1;
@@ -123,6 +123,13 @@ Standard comparisons.
 1 >= 1;
 1 < 1;
 1 <= 1;
+
+```
+String Comparisons *(also see [compareStrings()](#comparestrings) )*
+```
+"cat" == "cat"; //true
+"cAt" == "cAT"; //true
+"doge" != "dog"; //true
 ```
 
 ##Iteration
@@ -145,7 +152,7 @@ Block
 Comment
 */
 ```
-
+<a name="bat">
 ##Arrays
 Arrays are 0-based indexing. You can also index strings since they're... ARRAYS (of characters)!
 ```
