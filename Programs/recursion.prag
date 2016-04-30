@@ -1,0 +1,9 @@
+myFunc(x) {
+  println(x);
+  if (x > 0) {
+    x--; 
+    myFunc(x);
+  }
+}
+
+myFunc(3);
