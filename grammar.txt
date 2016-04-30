@@ -77,8 +77,10 @@ statementList : statement
               | statement statementList
 
 statement : varDef SEMI
+          | varDef OPAREN expr1 CPAREN SEMI
           | whileLoop
           | expr1 SEMI
+          | expr1 expr1 SEMI
           | ifStatement
           | RETURN expr1 SEMI
           | funcDef

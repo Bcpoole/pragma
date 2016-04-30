@@ -1,3 +1,4 @@
+//A cluster display of all cases (prior to objects) of how I want me language to work
 //comment
 
 func1() {

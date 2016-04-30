@@ -46,6 +46,8 @@ namespace dpl {
           return tree;
         case "ARRAY":
           return tree;
+        case "ENV":
+          return tree;
         //find the value of variables in the environment
         case "ID":
           if (tree.Right == null) { //variable reference
@@ -369,6 +371,16 @@ namespace dpl {
       if (args == null) {
         Console.WriteLine();
       } else {
+        try {
+          var q = args.Left.Left;
+          var qq = Environment.Lookup(q.sval, env);
+          var z = args.Left.Right.Left;
+          var zz = Eval(z, env);
+          //var a = Environment.Lookup()
+          var zzz = Eval(z, env).GetEnvValue();
+          var x = Eval(args.Left, env).GetEnvValue();
+          var y = 7;
+        } catch (Exception ex) { }
         string message = Eval(args.Left, env).GetValue();
         while (args.Right != null) {
           message += Eval(args.Right.Left, env).GetValue();
@@ -548,9 +560,6 @@ namespace dpl {
       var eargs = EvalArgs(args, env);
       var xenv = Environment.Extend(parameters, eargs, senv);
 
-      //insert a variable that points to xenv
-      //Environment.Extend(new Lexeme("ID", "this"), xenv, xenv);
-
       return Eval(body, xenv);
     }
 
@@ -614,7 +623,15 @@ namespace dpl {
       else if (setTo.type == "ENV") { //object
         try {
           Environment.Lookup(t.sval, env);
-          Environment.Update(t.sval, env, setTo.aval);
+          Environment.Update(t.sval, env, setTo.envVal);
+        }
+        catch {
+          env = Environment.Insert(t, setTo, env);
+        }
+      } else if (setTo.type == "CLOSURE") {
+        try {
+          Environment.Lookup(t.sval, env);
+          Environment.Update(t.sval, env, setTo.Left.envVal);
         }
         catch {
           env = Environment.Insert(t, setTo, env);
@@ -626,16 +643,32 @@ namespace dpl {
     }
 
     private static Lexeme EvalAssign(Lexeme t, Lexeme env) {
-      if (t.Right.type == "array") {
+      if (t.Left != null) { //object reference
+        var obj = Environment.Lookup(t.Left.sval, env);
+        var field = t.Left.Left;
+        Lexeme val = null;
+        if (t.Right.type == "array") {
+          val = EvalArray(t.Right, env);
+          Environment.Update(field.sval, obj, val.aval);
+        } else {
+          val = Eval(t.Right, env);
+          if (val.type == "ENV") {
+            Environment.Update(field.sval, obj, val.GetEnvValue());
+          } else {
+            Environment.Update(field.sval, obj, val.GetValue());
+          }
+        }
+        return val;
+      } else if(t.Right.type == "ID" && t.Right.Left != null && t.Right.Left.type == "ID") {
+        var x = Eval(t.Right, env);
+        var y = Eval(t.Right.Left, x);
+        var z = Eval(y.Right, env);
+        return z;
+        throw new NotImplementedException();
+      } else if (t.Right.type == "array") {
         return EvalArray(t.Right, env);
       } else if (t.Left != null && t.Left.Right != null && t.Left.Right.type == "INTEGER") { //array with index
         return EvalArraySetIndex(t, env);
-      } else if (t.Left != null) { //object reference
-        var obj = Environment.Lookup(t.Left.sval, env);
-        var field = t.Left.Left;
-        var val = Eval(t.Right, env);
-        Environment.Update(field.sval, obj, val.GetValue());
-        return val;
       } else {
         return Eval(t.Right, env);
       }

@@ -495,11 +495,21 @@ namespace dpl {
         tree = funcDef();
       } else if (varDefPending()) {
         tree = varDef();
+        if (check("OPAREN")) { //getting value from object method
+          match("OPAREN");
+          tree.Right.Right.Left.Left = expr1();
+          match("CPAREN");
+        }
         match("SEMI");
       } else if (whileLoopPending()) {
         tree = whileLoop();
       } else if (expr1Pending()) {
         tree = expr1();
+        if (check("OPAREN")) { //calling object method
+          match("OPAREN");
+          tree.Left = expr1();
+          match("CPAREN");
+        }
         match("SEMI");
       } else if (ifStatementPending()) {
         tree = ifStatement();

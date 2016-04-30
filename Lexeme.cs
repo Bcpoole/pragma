@@ -8,6 +8,7 @@ namespace dpl {
     public string sval;
     //real rval;
     public object[] aval;
+    public Lexeme envVal;
 
     public Lexeme Left;
     public Lexeme Right;
@@ -51,28 +52,46 @@ namespace dpl {
       }
       else if (type == "INTEGER") {
         return ival.ToString();
+      } else if (type == "ARRAY") {
+        var arr = "[";
+        foreach (var item in aval) {
+          arr += item + ", ";
+        }
+        arr = arr.Remove(arr.Length - 2) + "]";
+        return arr;
       }
-      throw new Exception("Invalid value type");
+      throw new Exception("Invalid value type! Type: " + type);
+    }
+
+    public Lexeme GetEnvValue() {
+      if (type == "ENV") {
+        return envVal;
+      }
+      throw new Exception("Invalid type call to GetEnvValue()! Type: " + type);
     }
 
     public void SetValue(string val) {
-      if (type == "STRING") {
-        sval = val;
-      }
-      else if (type == "INTEGER") {
+      try {
         ival = Convert.ToInt32(val);
-      }
-      else {
-        throw new Exception("Invalid value type");
+        type = "INTEGER";
+        sval = "";
+        aval = null;
+      } catch {
+        sval = val;
+        type = "STRING";
+        ival = 0;
+        aval = null;
       }
     }
-
     public void SetArrayValue(object[] val) {
-      if (type == "ARRAY") {
-        aval = val;
-      } else {
-        throw new Exception("SetArrayValue() called for invalid value type! Type: " + type);
-      }
+      aval = val;
+      type = "ARRAY";
+      ival = 0;
+      sval = "";
+    }
+    public void SetEnvValue(Lexeme val) {
+      type = "ENV";
+      envVal = val;
     }
   }
 }

@@ -12,6 +12,10 @@ namespace dpl {
         return env;
       }
 
+      if (env.type == "CLOSURE") {
+        env = env.Left;
+      }
+
       while (env != null) {
         var table = Car(env);
         var vars = Car(table);
@@ -54,7 +58,6 @@ namespace dpl {
 
       throw new Exception(String.Format("variable '{0}' is undefined!", id));
     }
-
     public static void Update(string id, Lexeme env, object[] val) {
       while (env != null) {
         var table = Car(env);
@@ -68,6 +71,28 @@ namespace dpl {
           }
           else if (id == vars.sval) {
             vals.SetArrayValue(val);
+            return;
+          }
+          vars = Cdr(vars);
+          vals = Cdr(vals);
+        }
+        env = Cdr(env);
+      }
+
+      throw new Exception(String.Format("variable '{0}' is undefined!", id));
+    }
+    public static void Update(string id, Lexeme env, Lexeme val) {
+      while (env != null) {
+        var table = Car(env);
+        var vars = Car(table);
+        var vals = Cdr(table);
+
+        while (vars != null) {
+          if (vars.type == "JOIN" && id == Car(vars).sval) {
+            Car(vals).SetEnvValue(val);
+            return;
+          } else if (id == vars.sval) {
+            vals.SetEnvValue(val);
             return;
           }
           vars = Cdr(vars);
